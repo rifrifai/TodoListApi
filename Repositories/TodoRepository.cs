@@ -33,14 +33,20 @@ public class TodoRepository : ITodoRepository
             if (string.Equals(queryParameters.SortBy, "dueDate", StringComparison.OrdinalIgnoreCase))
             {
                 query = queryParameters.SortOrder?.ToLower() == "desc"
-                    ? query.OrderByDescending(t => t.Priority)
-                    : query.OrderBy(t => t.Priority);
+                    ? query.OrderByDescending(t => t.DueDate)
+                    : query.OrderBy(t => t.DueDate);
             }
             else if (string.Equals(queryParameters.SortBy, "priority", StringComparison.OrdinalIgnoreCase))
             {
                 query = queryParameters.SortOrder?.ToLower() == "desc"
                     ? query.OrderBy(t => t.Priority)
                     : query.OrderByDescending(t => t.Priority);
+            }
+            else if (string.Equals(queryParameters.SortBy, "title", StringComparison.OrdinalIgnoreCase))
+            {
+                query = queryParameters.SortOrder?.ToLower() == "desc"
+                    ? query.OrderByDescending(t => t.Title)
+                    : query.OrderBy(t => t.Title);
             }
         }
         else
