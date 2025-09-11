@@ -30,9 +30,9 @@ public class TodoService : ITodoService
     public Task CreateTodoAsync(TodoItem item)
     {
         if (string.IsNullOrWhiteSpace(item.Title) && string.IsNullOrWhiteSpace(item.Desc))
-        {
             throw new ArgumentException("judul dan deskripsi tidak boleh kosong");
-        }
+
+        if (!item.DueDate.HasValue) item.DueDate = DateTime.UtcNow.AddDays(1);
         return _repo.AddAsync(item);
     }
 
@@ -47,7 +47,9 @@ public class TodoService : ITodoService
 
         if (patchDto.IsCompleted.HasValue) existingItem.IsCompleted = patchDto.IsCompleted.Value;
 
-        if (patchDto.DueDate.HasValue) existingItem.DueDate = patchDto.DueDate;
+        if (patchDto.DueDate.HasValue) existingItem.DueDate = patchDto.DueDate.Value;
+
+        if (patchDto.Priority.HasValue) existingItem.Priority = patchDto.Priority.Value;
 
         var result = await _repo.UpdateAsync(existingItem);
         return result;
