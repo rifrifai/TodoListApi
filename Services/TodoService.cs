@@ -47,6 +47,8 @@ public class TodoService : ITodoService
 
         if (patchDto.IsCompleted.HasValue) existingItem.IsCompleted = patchDto.IsCompleted.Value;
 
+        if (patchDto.DueDate.HasValue) existingItem.DueDate = patchDto.DueDate;
+
         var result = await _repo.UpdateAsync(existingItem);
         return result;
     }

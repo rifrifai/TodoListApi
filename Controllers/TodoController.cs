@@ -41,6 +41,7 @@ public class TodoController : ControllerBase
         {
             Title = todoDto.Title,
             Desc = todoDto.Desc,
+            DueDate = todoDto.DueDate
         };
 
         await _service.CreateTodoAsync(todoItem);
