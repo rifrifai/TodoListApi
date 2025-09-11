@@ -17,9 +17,9 @@ public class TodoService : ITodoService
         _repo = repo;
     }
 
-    public Task<IEnumerable<TodoItem>> GetAllTodosAsync()
+    public Task<IEnumerable<TodoItem>> GetAllTodosAsync(TodoQueryParameters queryParameters)
     {
-        return _repo.GetAllAsync();
+        return _repo.GetAllAsync(queryParameters);
     }
 
     public Task<TodoItem?> GetTodoByIdAsync(Guid id)

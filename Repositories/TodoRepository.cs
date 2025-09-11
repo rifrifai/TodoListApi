@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using todo.Data;
+using todo.Dtos;
 using todo.Models;
 
 namespace todo.Repositories;
@@ -16,10 +17,42 @@ public class TodoRepository : ITodoRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<TodoItem>> GetAllAsync()
+    public async Task<IEnumerable<TodoItem>> GetAllAsync(TodoQueryParameters queryParameters)
     {
-        var result = await _context.TodoItems.ToListAsync();
-        return result;
+        var query = _context.TodoItems.AsQueryable();
+
+        // filter berdasarkan status IsCompleted
+        if (queryParameters.IsCompleted.HasValue) query = query.Where(t => t.IsCompleted == queryParameters.IsCompleted.Value);
+
+        // filter berdasarkan Priority
+        if (queryParameters.Priority.HasValue) query = query.Where(t => t.Priority == queryParameters.Priority.Value);
+
+        // sorting
+        if (!string.IsNullOrWhiteSpace(queryParameters.SortBy))
+        {
+            if (string.Equals(queryParameters.SortBy, "dueDate", StringComparison.OrdinalIgnoreCase))
+            {
+                query = queryParameters.SortOrder?.ToLower() == "desc"
+                    ? query.OrderByDescending(t => t.Priority)
+                    : query.OrderBy(t => t.Priority);
+            }
+            else if (string.Equals(queryParameters.SortBy, "priority", StringComparison.OrdinalIgnoreCase))
+            {
+                query = queryParameters.SortOrder?.ToLower() == "desc"
+                    ? query.OrderBy(t => t.Priority)
+                    : query.OrderByDescending(t => t.Priority);
+            }
+        }
+        else
+        {
+            // urutan default
+            query = query.OrderBy(t => t.Title);
+        }
+
+        return await query.ToListAsync();
+
+        // var result = await _context.TodoItems.ToListAsync();
+        // return result;
     }
 
     public async Task<TodoItem?> GetByIdAsync(Guid id)

@@ -20,9 +20,9 @@ public class TodoController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<TodoItem>>> GetTodos()
+    public async Task<ActionResult<IEnumerable<TodoItem>>> GetTodos([FromQuery] TodoQueryParameters queryParameters)
     {
-        var todos = await _service.GetAllTodosAsync();
+        var todos = await _service.GetAllTodosAsync(queryParameters);
         return Ok(todos);
     }
     [HttpGet("{id}")]
@@ -60,14 +60,33 @@ public class TodoController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutTodo(Guid id, TodoItem todoItem)
+    public async Task<IActionResult> PutTodo(Guid id, CreateTodoDto todoDto)
     {
-        if (id != todoItem.Id) return BadRequest("ID tidak ditemukan");
+        var todoItem = new TodoItem
+        {
+            Id = id,
+            Title = todoDto.Title,
+            Desc = todoDto.Desc,
+            DueDate = todoDto.DueDate,
+            Priority = todoDto.Priority,
+            IsCompleted = false
+        };
 
-        await _service.UpdateTodoAsync(id, todoItem);
-        
-        return Ok("Todo berhasil di ubah!");
+        var wasUpdated = await _service.UpdateTodoAsync(id, todoItem);
+
+        if (!wasUpdated) return NotFound("ID tidak ditemukan");
+
+        return Ok(todoItem);
     }
+    // public async Task<IActionResult> PutTodo(Guid id, TodoItem todoItem)
+    // {
+    //     if (id != todoItem.Id) return BadRequest("ID tidak ditemukan");
+
+    //     await _service.UpdateTodoAsync(id, todoItem);
+
+    //     return Ok("Todo berhasil di ubah!");
+    // }
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTodo(Guid id)
     {
