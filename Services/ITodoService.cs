@@ -9,10 +9,10 @@ namespace todo.Services;
 
 public interface ITodoService
 {
-    Task<IEnumerable<TodoItem>> GetAllTodosAsync(TodoQueryParameters queryParameters);
-    Task<TodoItem?> GetTodoByIdAsync(Guid id);
-    Task CreateTodoAsync(TodoItem item);
-    Task<bool> PatchTodoAsync(Guid id, UpdateTodoDto patchDto);
-    Task<bool> UpdateTodoAsync(Guid id, TodoItem item);
+    Task<IEnumerable<TodoDto>> GetAllTodosAsync(TodoQueryParameters queryParameters);
+    Task<TodoDto?> GetTodoByIdAsync(Guid id);
+    Task<TodoDto> CreateTodoAsync(CreateTodoDto createTodoDto);
+    Task<TodoDto?> PatchTodoAsync(Guid id, UpdateTodoDto patchDto);
+    Task<TodoDto?> UpdateTodoAsync(Guid id, UpdateTodoDto updateTodoDto);
     Task<bool> DeleteTodoAsync(Guid id);
 }
