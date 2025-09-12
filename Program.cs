@@ -14,6 +14,9 @@ builder.Services.AddDbContext<TodoContext>(options =>
 builder.Services.AddScoped<ITodoRepository, TodoRepository>();
 builder.Services.AddScoped<ITodoService, TodoService>();
 
+// 3. Register IMapper or auto mapper
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
