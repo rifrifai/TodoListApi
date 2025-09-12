@@ -48,26 +48,26 @@ public class TodoService : ITodoService
         // return _repo.AddAsync(item);
     }
 
-    public async Task<bool> PatchTodoAsync(Guid id, UpdateTodoDto patchDto)
-    {
-        var existingItem = await _repo.GetByIdAsync(id);
-        if (existingItem == null) return false;
+    // public async Task<bool> PatchTodoAsync(Guid id, UpdateTodoDto patchDto)
+    // {
+    //     var existingItem = await _repo.GetByIdAsync(id);
+    //     if (existingItem == null) return false;
 
-        if (patchDto.Title != null) existingItem.Title = patchDto.Title;
+    //     if (patchDto.Title != null) existingItem.Title = patchDto.Title;
 
-        if (patchDto.Desc != null) existingItem.Desc = patchDto.Desc;
+    //     if (patchDto.Desc != null) existingItem.Desc = patchDto.Desc;
 
-        if (patchDto.IsCompleted.HasValue) existingItem.IsCompleted = patchDto.IsCompleted.Value;
+    //     if (patchDto.IsCompleted.HasValue) existingItem.IsCompleted = patchDto.IsCompleted.Value;
 
-        if (patchDto.DueDate.HasValue) existingItem.DueDate = patchDto.DueDate.Value;
+    //     if (patchDto.DueDate.HasValue) existingItem.DueDate = patchDto.DueDate.Value;
 
-        if (patchDto.Priority.HasValue) existingItem.Priority = patchDto.Priority.Value;
+    //     if (patchDto.Priority.HasValue) existingItem.Priority = patchDto.Priority.Value;
 
-        var result = await _repo.UpdateAsync(existingItem);
-        return result;
-    }
+    //     var result = await _repo.UpdateAsync(existingItem);
+    //     return result;
+    // }
 
-    public async Task<TodoDto?> UpdateTodoAsync(Guid id, UpdateTodoDto updateTodoDto)
+    public async Task<TodoDto?> PatchTodoAsync(Guid id, UpdateTodoDto updateTodoDto)
     {
         var todoItem = await _repo.GetByIdAsync(id);
         if (todoItem == null) return null;

@@ -20,13 +20,13 @@ public class TodoController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<TodoItem>>> GetTodos([FromQuery] TodoQueryParameters queryParameters)
+    public async Task<ActionResult<IEnumerable<TodoDto>>> GetTodos([FromQuery] TodoQueryParameters queryParameters)
     {
         var todos = await _service.GetAllTodosAsync(queryParameters);
         return Ok(todos);
     }
     [HttpGet("{id}")]
-    public async Task<ActionResult<TodoItem>> GetTodo(Guid id)
+    public async Task<ActionResult<TodoDto>> GetTodo(Guid id)
     {
         var todo = await _service.GetTodoByIdAsync(id);
         if (todo == null) return NotFound();
@@ -35,56 +35,52 @@ public class TodoController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<TodoItem>> PostTodo(CreateTodoDto todoDto)
+    public async Task<ActionResult<TodoDto>> PostTodo(CreateTodoDto createTodoDto)
     {
-        var todoItem = new TodoItem
-        {
-            Title = todoDto.Title,
-            Desc = todoDto.Desc,
-            DueDate = todoDto.DueDate,
-            Priority = todoDto.Priority
-        };
+        var newTodo = await _service.CreateTodoAsync(createTodoDto);
 
-        await _service.CreateTodoAsync(todoItem);
+        // var todoItem = new TodoItem
+        // {
+        //     Title = todoDto.Title,
+        //     Desc = todoDto.Desc,
+        //     DueDate = todoDto.DueDate,
+        //     Priority = todoDto.Priority
+        // };
 
-        return CreatedAtAction(nameof(GetTodo), new { id = todoItem.Id }, todoItem);
+        // await _service.CreateTodoAsync(todoItem);
+
+        // return CreatedAtAction(nameof(GetTodo), new { id = todoItem.Id }, todoItem);
+        var result = CreatedAtAction(nameof(GetTodo), new { id = newTodo.Id }, newTodo);
+        return result;
     }
 
     [HttpPatch("{id}")]
-    public async Task<IActionResult> PatchTodo(Guid id, [FromBody] UpdateTodoDto patchDto)
+    public async Task<ActionResult<TodoDto>> PatchTodo(Guid id, [FromBody] UpdateTodoDto patchDto)
     {
         var wasUpdated = await _service.PatchTodoAsync(id, patchDto);
-        if (!wasUpdated) return NotFound("ID Todo tidak ditemukan!");
+        if (wasUpdated == null) return NotFound("ID Todo tidak ditemukan!");
 
-        return Ok("Todo berhasil diupdate sebagian (patch).");
+        return Ok(wasUpdated);
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> PutTodo(Guid id, CreateTodoDto todoDto)
-    {
-        var todoItem = new TodoItem
-        {
-            Id = id,
-            Title = todoDto.Title,
-            Desc = todoDto.Desc,
-            DueDate = todoDto.DueDate,
-            Priority = todoDto.Priority,
-            IsCompleted = false
-        };
-
-        var wasUpdated = await _service.UpdateTodoAsync(id, todoItem);
-
-        if (!wasUpdated) return NotFound("ID tidak ditemukan");
-
-        return Ok(todoItem);
-    }
-    // public async Task<IActionResult> PutTodo(Guid id, TodoItem todoItem)
+    // [HttpPut("{id}")]
+    // public async Task<IActionResult> PutTodo(Guid id, CreateTodoDto todoDto)
     // {
-    //     if (id != todoItem.Id) return BadRequest("ID tidak ditemukan");
+    //     var todoItem = new TodoItem
+    //     {
+    //         Id = id,
+    //         Title = todoDto.Title,
+    //         Desc = todoDto.Desc,
+    //         DueDate = todoDto.DueDate,
+    //         Priority = todoDto.Priority,
+    //         IsCompleted = false
+    //     };
 
-    //     await _service.UpdateTodoAsync(id, todoItem);
+    //     var wasUpdated = await _service.UpdateTodoAsync(id, todoItem);
 
-    //     return Ok("Todo berhasil di ubah!");
+    //     if (!wasUpdated) return NotFound("ID tidak ditemukan");
+
+    //     return Ok(todoItem);
     // }
 
     [HttpDelete("{id}")]
