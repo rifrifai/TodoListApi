@@ -17,9 +17,9 @@ public class TodoRepository : ITodoRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<TodoItem>> GetAllAsync(TodoQueryParameters queryParameters)
+    public async Task<IEnumerable<TodoItem>> GetAllAsync(int userId, TodoQueryParameters queryParameters)
     {
-        var query = _context.TodoItems.AsQueryable();
+        var query = _context.TodoItems.Where(t => t.UserId == userId).AsQueryable();
 
         // filter berdasarkan status IsCompleted
         if (queryParameters.IsCompleted.HasValue) query = query.Where(t => t.IsCompleted == queryParameters.IsCompleted.Value);
@@ -56,9 +56,6 @@ public class TodoRepository : ITodoRepository
         }
 
         return await query.ToListAsync();
-
-        // var result = await _context.TodoItems.ToListAsync();
-        // return result;
     }
 
     public async Task<TodoItem?> GetByIdAsync(Guid id)

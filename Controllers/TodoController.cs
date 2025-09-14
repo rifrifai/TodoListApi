@@ -6,11 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 using todo.Models;
 using todo.Services;
 using todo.Dtos;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace todo.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class TodoController : ControllerBase
 {
     private readonly ITodoService _service;
@@ -22,7 +25,11 @@ public class TodoController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<TodoDto>>> GetTodos([FromQuery] TodoQueryParameters queryParameters)
     {
-        var todos = await _service.GetAllTodosAsync(queryParameters);
+        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userIdString)) return Unauthorized("User ID tidak ditemukan");
+        var userId = int.Parse(userIdString);
+
+        var todos = await _service.GetAllTodosAsync(userId, queryParameters);
         return Ok(todos);
     }
     [HttpGet("{id}")]
@@ -37,7 +44,11 @@ public class TodoController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<TodoDto>> PostTodo(CreateTodoDto createTodoDto)
     {
-        var newTodo = await _service.CreateTodoAsync(createTodoDto);
+        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userIdString)) return Unauthorized("User ID tidak ditemukan");
+        var userId = int.Parse(userIdString);
+
+        var newTodo = await _service.CreateTodoAsync(createTodoDto, userId);
 
         var result = CreatedAtAction(nameof(GetTodo), new { id = newTodo.Id }, newTodo);
         return result;

@@ -9,7 +9,7 @@ namespace todo.Repositories;
 
 public interface ITodoRepository
 {
-    Task<IEnumerable<TodoItem>> GetAllAsync(TodoQueryParameters queryParameters);
+    Task<IEnumerable<TodoItem>> GetAllAsync(int userId, TodoQueryParameters queryParameters);
     Task<TodoItem?> GetByIdAsync(Guid id);
     Task AddAsync(TodoItem item);
     Task <bool>UpdateAsync(TodoItem item);

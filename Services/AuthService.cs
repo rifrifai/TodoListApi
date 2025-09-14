@@ -75,7 +75,7 @@ namespace todo.Services
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("Jwt:Key").Value!));
 
             // buat signing credentials
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
 
             // buat token
             var tokenDescriptor = new SecurityTokenDescriptor
