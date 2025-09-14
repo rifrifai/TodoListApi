@@ -39,17 +39,6 @@ public class TodoController : ControllerBase
     {
         var newTodo = await _service.CreateTodoAsync(createTodoDto);
 
-        // var todoItem = new TodoItem
-        // {
-        //     Title = todoDto.Title,
-        //     Desc = todoDto.Desc,
-        //     DueDate = todoDto.DueDate,
-        //     Priority = todoDto.Priority
-        // };
-
-        // await _service.CreateTodoAsync(todoItem);
-
-        // return CreatedAtAction(nameof(GetTodo), new { id = todoItem.Id }, todoItem);
         var result = CreatedAtAction(nameof(GetTodo), new { id = newTodo.Id }, newTodo);
         return result;
     }
@@ -62,26 +51,6 @@ public class TodoController : ControllerBase
 
         return Ok(wasUpdated);
     }
-
-    // [HttpPut("{id}")]
-    // public async Task<IActionResult> PutTodo(Guid id, CreateTodoDto todoDto)
-    // {
-    //     var todoItem = new TodoItem
-    //     {
-    //         Id = id,
-    //         Title = todoDto.Title,
-    //         Desc = todoDto.Desc,
-    //         DueDate = todoDto.DueDate,
-    //         Priority = todoDto.Priority,
-    //         IsCompleted = false
-    //     };
-
-    //     var wasUpdated = await _service.UpdateTodoAsync(id, todoItem);
-
-    //     if (!wasUpdated) return NotFound("ID tidak ditemukan");
-
-    //     return Ok(todoItem);
-    // }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTodo(Guid id)
