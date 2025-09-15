@@ -9,5 +9,6 @@ namespace todo.Services
     public interface IAdminService
     {
         Task<IEnumerable<UserDto>> GetAllUsersAsync();
+        Task<bool> PromoteUserAsync(int id);
     }
 }

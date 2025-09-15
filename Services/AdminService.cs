@@ -26,5 +26,15 @@ namespace todo.Services
 
             return usersDto;
         }
+
+        public async Task<bool> PromoteUserAsync(int id)
+        {
+            var user = await _userRepo.GetByIdAsync(id);
+            if (user == null) return false;
+            user.Role = "Admin";
+            await _userRepo.UpdateAsync(user);
+
+            return true;
+        }
     }
 }

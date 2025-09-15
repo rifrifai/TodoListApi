@@ -25,5 +25,14 @@ namespace todo.Controllers
             var usersDto = await _service.GetAllUsersAsync();
             return Ok(usersDto);
         }
+
+        [HttpPut("users/{id}/promote")]
+        public async Task<IActionResult> PromoteUser(int id)
+        {
+            var result = await _service.PromoteUserAsync(id);
+            if (!result) return NotFound("User tidak ditemukan");
+
+            return Ok("User berhasil dipromosikan menjadi Admin");
+        }
     }
 }
