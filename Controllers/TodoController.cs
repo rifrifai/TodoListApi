@@ -71,4 +71,11 @@ public class TodoController : ControllerBase
 
         return Ok("Todo berhasil dihapus");
     }
+
+    [HttpGet("admin-test")]
+    [Authorize(Roles = "Admin")]
+    public IActionResult AdminTest()
+    {
+        return Ok("Hello Admin!");
+    }
 }

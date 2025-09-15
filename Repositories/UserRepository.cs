@@ -28,5 +28,11 @@ namespace todo.Repositories
             await _context.SaveChangesAsync();
             return user;
         }
+
+        public async Task<IEnumerable<User>> GetAllAsync()
+        {
+            var result = await _context.Users.ToListAsync();
+            return result;
+        }
     }
 }
