@@ -42,7 +42,7 @@ public class TodoController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<TodoDto>> PostTodo(CreateTodoDto createTodoDto)
+    public async Task<ActionResult<TodoDto>> PostTodo([FromBody] CreateTodoDto createTodoDto)
     {
         var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (string.IsNullOrEmpty(userIdString)) return Unauthorized("User ID tidak ditemukan");
