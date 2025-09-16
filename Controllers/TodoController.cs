@@ -25,10 +25,17 @@ public class TodoController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<TodoDto>>> GetTodos([FromQuery] TodoQueryParameters queryParameters)
     {
-        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (string.IsNullOrEmpty(userIdString)) return Unauthorized("User ID tidak ditemukan");
-        var userId = int.Parse(userIdString);
+        int? userId = null;
 
+        // jika bukan admin, maka filter berdasarkan userId yang login
+        if (!User.IsInRole("Admin"))
+        {
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdString)) return Unauthorized("User ID tidak ditemukan");
+            userId = int.Parse(userIdString);
+        }
+
+        // jika user adalah admin, maka userId tetap null, sehingga service akan mengembalikan semua todo!
         var todos = await _service.GetAllTodosAsync(userId, queryParameters);
         return Ok(todos);
     }

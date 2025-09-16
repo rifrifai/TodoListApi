@@ -14,4 +14,5 @@ public class TodoDto
     public bool IsCompleted { get; set; }
     public DateTime? DueDate { get; set; }
     public PriorityLevel Priority { get; set; }
+    public string Username { get; set; } = null!;
 }

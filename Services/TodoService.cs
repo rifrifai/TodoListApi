@@ -20,7 +20,7 @@ public class TodoService : ITodoService
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<TodoDto>> GetAllTodosAsync(int userId, TodoQueryParameters queryParameters)
+    public async Task<IEnumerable<TodoDto>> GetAllTodosAsync(int? userId, TodoQueryParameters queryParameters)
     {
         var todoItems = await _repo.GetAllAsync(userId, queryParameters);
         var result = _mapper.Map<IEnumerable<TodoDto>>(todoItems);

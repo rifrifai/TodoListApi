@@ -17,9 +17,12 @@ public class TodoRepository : ITodoRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<TodoItem>> GetAllAsync(int userId, TodoQueryParameters queryParameters)
+    public async Task<IEnumerable<TodoItem>> GetAllAsync(int? userId, TodoQueryParameters queryParameters)
     {
-        var query = _context.TodoItems.Where(t => t.UserId == userId).AsQueryable();
+        var query = _context.TodoItems.Include(t => t.User).AsQueryable();
+
+        // filter berdasarkan userId
+        if (userId.HasValue) query = query.Where(t => t.UserId == userId.Value);
 
         // filter berdasarkan status IsCompleted
         if (queryParameters.IsCompleted.HasValue) query = query.Where(t => t.IsCompleted == queryParameters.IsCompleted.Value);

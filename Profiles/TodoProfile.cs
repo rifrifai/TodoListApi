@@ -22,6 +22,6 @@ public class TodoProfile : Profile
 
         // mapping dari model ke dto untuk response
         // ex: GET /api/todo/{id}
-        CreateMap<TodoItem, TodoDto>();
+        CreateMap<TodoItem, TodoDto>().ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.User.Username));
     }
 }
